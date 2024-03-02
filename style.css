@@ -1,0 +1,140 @@
+/* Reset and base styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 1.5s ease-out;
+}
+
+/* Navigation and Header */
+header {
+  background: #007bff;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease-in-out;
+}
+
+header nav a:hover,
+header nav a:focus { /* Added focus for accessibility */
+  color: #cce;
+  outline: none; /* Optionally remove outline and replace with a more visually appealing focus indicator */
+}
+
+.header-content h1, .header-content p {
+  margin: 20px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Badge Styling for a Gold Bar Effect */
+.badge {
+  position: relative;
+  background: linear-gradient(145deg, #ffd700 20%, #ffdf00 40%, #ffdd00 50%, #ffdf00 60%, #ffd700 80%);
+  color: #004085; /* Adjusted color for better visibility on gold */
+  padding: 0px 3px;
+  border-radius: 2px;
+  font-size: 0.4em;
+  vertical-align: super;
+  margin-left: 4px;
+  display: inline-block;
+  box-shadow: inset 0 0 4px #c79300; /* Inner shadow for depth */
+  border: 1px solid #c79300; /* Slight border for definition */
+  overflow: hidden; /* Ensures pseudo-elements don't overflow the badge's boundaries */
+}
+
+/* Inner Glow Effect */
+.badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 2px; /* Match the badge's border-radius */
+  background: linear-gradient(45deg, rgba(255, 244, 214, 0.7), rgba(255, 255, 255, 0.7), rgba(255, 244, 214, 0.7));
+  opacity: 0.7;
+  filter: blur(3px);
+  z-index: -1;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.7; transform: scale(1); filter: blur(3px); }
+  50% { opacity: 0.9; transform: scale(1.05); filter: blur(5px); }
+}
+
+/* External Shine Effect */
+.badge::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: shine 4s linear infinite;
+  border-radius: 2px;
+}
+
+@keyframes shine {
+  from { transform: rotate(0deg) translateX(-50%); }
+  to { transform: rotate(360deg) translateX(-50%); }
+}
+
+.paper-link {
+  display: inline-block;
+  background-color: #007bff; /* Primary color for consistency */
+  color: #ffffff; /* White text for contrast */
+  padding: 8px 16px; /* Reduced padding for a smaller button */
+  border-radius: 20px; /* Adjusted border-radius for aesthetic consistency with the smaller size */
+  font-weight: 600; /* Bold text */
+  font-size: 0.9em; /* Optionally adjust font size for better fit */
+  text-decoration: none; /* Removes underline from the link */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Defined shadow for depth */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.paper-link:hover, .paper-link:focus {
+  background-color: #0056b3; /* Darker shade on hover/focus for interaction feedback */
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Larger shadow for a "lifting" effect */
+  transform: translateY(-2px); /* Slightly raises the button */
+  outline: none; /* Consider accessibility alternatives */
+}
+
+.paper-link:active {
+  background-color: #004494; /* Even darker for the active state */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow to simulate "pressing" down */
+  transform: translateY(1px); /* Moves the button down */
+}
