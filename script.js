@@ -39,51 +39,63 @@ var treeData = [
   ];
   
   
-  
-  // ************** Generate the tree diagram	 *****************
-  var margin = {top: 100, right: 120, bottom: 20, left: 120},
-      width = 960 - margin.right - margin.left;
+var container = d3.select(".visualization-container");
+var containerWidth = container.style("width");
 
-    var baseHeight = 500; 
+// ************** Generate the tree diagram	 *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 150},
+    width = containerWidth - margin.right - margin.left;
 
-    function calculateMaxDepth(data, depth = 0) {
-        if (!data.children || data.children.length === 0) return depth;
-        return Math.max(...data.children.map(child => calculateMaxDepth(child, depth + 1)));
+var baseHeight = 500; 
+
+function calculateMaxDepth(data, depth = 0) {
+    if (!data.children || data.children.length === 0) return depth;
+    return Math.max(...data.children.map(child => calculateMaxDepth(child, depth + 1)));
+}
+
+// Use this function to find maxDepth from the root of your tree data
+var maxDepth = calculateMaxDepth(treeData[0]);
+
+
+var totalHeight = baseHeight + (maxDepth * 180); 
+
+    
+var i = 0,
+    duration = 750,
+    root;
+
+var tree = d3.layout.tree()
+    .size([totalHeight, width]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select(".visualization-container").append("svg")
+    .attr("width", '100%')
+    .attr("height", totalHeight + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Now, attach the click event to the entire SVG to capture clicks on the background
+d3.select(".visualization-container").on("click", function(event, d) {
+    // Check if the click was on the background, not on a node.
+    if (event.target.tagName === "svg" || event.target.tagName === "SVG") {
+        document.getElementById('placeholder-text').style.display = 'block'; // Hide the placeholder text
+        var tableContent = document.querySelector('.table-content');
+        tableContent.style.display = 'none';
+        console.log('click on background');
     }
-    
-    // Use this function to find maxDepth from the root of your tree data
-    var maxDepth = calculateMaxDepth(treeData[0]);
-    
+});
 
-    var totalHeight = baseHeight + (maxDepth * 180); 
+root = treeData[0];
+root.x0 = totalHeight / 2;
+root.y0 = 0;
 
-        
-  var i = 0,
-      duration = 750,
-      root;
-  
-  var tree = d3.layout.tree()
-      .size([totalHeight, width]);
-  
-  var diagonal = d3.svg.diagonal()
-      .projection(function(d) { return [d.y, d.x]; });
-  
-  var svg = d3.select(".visualization-container").append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height", totalHeight + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  
-  root = treeData[0];
-  root.x0 = totalHeight / 2;
-  root.y0 = 0;
-    
-  update(root);
+update(root);
   
 //   d3.select(self.frameElement).style("height", "500px");
   
-  function update(source) {
-  
+function update(source) {
     // Compute the new tree layout.
     var nodes = tree.nodes(root).reverse(),
         links = tree.links(nodes);
@@ -99,8 +111,7 @@ var treeData = [
         .attr("class", "node")
         .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
         .on("click", click);
-  
-    
+
     nodeEnter.each(function(d) {
         var node = d3.select(this);
     
@@ -210,21 +221,37 @@ var treeData = [
       d.x0 = d.x;
       d.y0 = d.y;
     });
-  }
+}
   
-  // Toggle children on click.
-  function click(d) {
+// Toggle children on click.
+function click(d) {
+    d3.event.stopPropagation();
+
     if (d.children) {
-      d._children = d.children;
-      d.children = null;
+        d._children = d.children;
+        d.children = null;
+
+        document.getElementById('placeholder-text').style.display = 'block'; // Hide the placeholder text
+        var tableContent = document.querySelector('.table-content');
+        tableContent.style.display = 'none';
+
     } else {
-      d.children = d._children;
-      d._children = null;
+        d.children = d._children;
+        d._children = null;
+
+        // check if clicked node is root node, if yes, show the placeholder text and hide the table content
+
+        if (d.name === "LLMs in APS") {
+            document.getElementById('placeholder-text').style.display = 'block'; // Hide the placeholder text
+            var tableContent = document.querySelector('.table-content');
+            tableContent.style.display = 'none';
+        }
+        else {
+            document.getElementById('placeholder-text').style.display = 'none'; // Hide the placeholder text
+            var tableContent = document.querySelector('.table-content');
+            tableContent.style.display = 'block';
+        }
     }
     update(d);
-    console.log(d);
-    console.log(d.name);
 }
 
-// for each children in the tree do click
-treeData[0].children.forEach(click);
