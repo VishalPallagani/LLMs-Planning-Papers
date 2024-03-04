@@ -1,4 +1,4 @@
-export const jsonData = [
+const jsonData = [
     {
       "name": "LLMs in APS",
       "children": [
