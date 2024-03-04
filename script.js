@@ -4,7 +4,7 @@ var treeData = [
       "children": [
         {
           "name": "Language Translation",
-          "description": "Involves converting natural language into structured planning languages or formats like PDDL and vice-versa, enhancing the interface between human linguistic input andmachine-understandable planning directives.",
+          "description": "Involves converting natural language into structured planning languages or formats like PDDL and vice-versa, enhancing the interface between human linguistic input and machine-understandable planning directives.",
         },
         {
           "name": "Plan Generation",
@@ -99,6 +99,7 @@ var treeData = [
         .attr("class", "node")
         .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
         .on("click", click);
+  
     
     nodeEnter.each(function(d) {
         var node = d3.select(this);
